@@ -16,7 +16,7 @@ install(TARGETS number_publisher DESTINATION lib/${PROJECT_NAME})
 add_executable(square_subscriber src/square_subscriber.cpp)
 ament_target_dependencies(square_subscriber rclcpp std_msgs)
 install(TARGETS square_subscriber DESTINATION lib/${PROJECT_NAME})
-
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME}/)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
