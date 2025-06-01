@@ -70,11 +70,11 @@ In ROS 2 communication between nodes takes place via the following methods :
 
 * Service types are defined similarly to topic types, except service types have two parts: one message for the request and another for the response.
 
-            ros2 service type &lt;service_name>
+            ros2 service type <service_name>
 
 * To call services from command line we need to know the structure of input arguments ,it can be found using the ros2 interface show:
 
-            ros2 interface show &lt;type_name>
+            ros2 interface show <type_name>
 
 * If we know the service type and the type of arguments to give we can make a service call in command line using:
 
@@ -99,13 +99,13 @@ In ROS 2 communication between nodes takes place via the following methods :
 
 * To implement action along with the action type we must also know the type of argument we have to give in the goal ,to know that we have to use the ros2 interface show command:
 
-    ros2 interface show &lt;Action_type>
+    ros2 interface show <Action_type>
 
 * Sending an action goal:
 
-ros2 action send_goal &lt;action_name> &lt;action_type> &lt;values>
+ros2 action send_goal <action_name> <action_type> <values>
 
-&lt;values> need to be YAML format
+<values> need to be YAML format
 
 All goals have a unique ID which will be sent in the return message.
 
@@ -193,7 +193,7 @@ All goals have a unique ID which will be sent in the return message.
 
 * Moreover, DDS adds reliability when required. Throus Qos(Quality of service) settings ROS 2 via DDS enables us to choose between :
 
-** RELIABLE : **DDS adds acknowledgments & resends lost packets                      (like TCP).
+**RELIABLE**:DDS adds acknowledgments & resends lost packets                      (like TCP).
 
-**BEST_EFFORT : **DDS just sends and forgets (faster, like UDP)
+**BEST_EFFORT**:DDS just sends and forgets (faster, like UDP)
 
