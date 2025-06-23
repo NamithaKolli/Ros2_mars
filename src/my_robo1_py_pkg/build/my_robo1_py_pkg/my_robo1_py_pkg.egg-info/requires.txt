@@ -1,0 +1,4 @@
+ament_index_python
+rclpy
+setuptools
+std_msgs

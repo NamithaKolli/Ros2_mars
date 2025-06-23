@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<robot name="my_robo1" xmlns:xacro="http://ros.org/wiki/xacro">
+<!-- Defining properties -->
+<xacro:property name="wheel_radius" value="0.05"/>
+<xacro:property name="wheel_width" value="0.02"/>
+<xacro:property name="body_length" value="0.4"/>
+<xacro:property name="body_width" value="0.4"/>
+<xacro:property name="body_height" value="0.1"/>
+
+<!-- Base Link -->
+<link name="base_link">
+  <visual>
+    <geometry>
+      <box size="${body_length} ${body_width} ${body_height}"/>
+    </geometry>
+    <material name="blue">
+      <color rgba="0 0 0.8 1"/>
+    </material>
+  </visual>
+  <collision>
+    <geometry>
+      <box size="${body_length} ${body_width} ${body_height}"/>
+    </geometry>
+  </collision>
+  <inertial>
+    <mass value="5.0"/>
+    <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+  </inertial>
+</link>
+<!-- because the root link cannot have inertia I have added a dummy root link -->
+<link name="dummy_root"/>
+<joint name="world_to_base" type="fixed">
+  <parent link="dummy_root"/>
+  <child link="base_link"/>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+</joint>
+
+<!--macro to define a wheel -->
+<xacro:macro name="wheel" params="name x y">
+  <link name="${name}_link">
+    <visual>
+      <origin rpy="1.5708 0 0"/>      
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+    </visual>
+    <!--adding another visual element to visulaize rotation in rviz -->
+    <visual>
+      <origin xyz="${wheel_radius} 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+      <material name="green">
+      <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="1.5708 0 0"/>
+      <geometry> 
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+  </link>
+  <joint name="${name}_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="${name}_link"/>
+    <origin xyz="${x} ${y} -0.1" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+</xacro:macro>
+<!-- using macro to create 4 wheels -->
+<xacro:wheel name="front_left_wheel" x="-0.2" y="0.17"/>
+<xacro:wheel name="front_right_wheel" x="0.2" y="0.17"/>
+<xacro:wheel name="back_left_wheel" x="-0.2" y="-0.17"/>
+<xacro:wheel name="back_right_wheel" x="0.2" y="-0.17"/>
+<!-- LIDAR Link -->
+<link name="lidar_link">
+  <visual>
+    <geometry>
+      <cylinder radius="0.03" length="0.05"/>
+    </geometry>
+    <material name="white">
+      <color rgba="1 0 0 1"/>
+    </material>
+  </visual>
+  <collision>
+    <geometry>
+      <cylinder radius="0.03" length="0.05"/>
+    </geometry>
+  </collision>
+  <inertial>
+    <mass value="0.1"/>
+    <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+  </inertial>
+</link>
+
+<joint name="lidar_joint" type="fixed">
+  <parent link="base_link"/>
+  <child link="lidar_link"/>
+  <origin xyz="0 0.17 0.10" rpy="0 0 0"/>
+</joint>
+
+<gazebo>
+  <plugin name="wheel_drive_controller" filename="libgazebo_ros_diff_drive.so">
+
+    <!-- Wheel Configuration -->
+    <left_joint>front_left_wheel_joint</left_joint>
+    <right_joint>front_right_wheel_joint</right_joint>
+
+    <!-- Physical Properties -->
+    <wheel_separation>0.34</wheel_separation> <!-- Approx distance between left and right wheels -->
+    <wheel_diameter>0.1</wheel_diameter> 
+
+    <!-- Limits -->
+    <max_wheel_torque>20</max_wheel_torque>
+    <max_wheel_acceleration>0.5</max_wheel_acceleration>
+
+    <!-- Frames -->
+    <odometry_frame>odom</odometry_frame>
+    <robot_base_frame>base_link</robot_base_frame>
+
+    <!-- Publishing -->
+    <publish_odom>true</publish_odom>
+    <publish_odom_tf>true</publish_odom_tf>
+    <publish_wheel_tf>false</publish_wheel_tf>
+
+  </plugin>
+</gazebo>
+
+<gazebo reference="lidar_link">
+  <sensor type="ray" name="lidar_sensor">
+    <pose>0 0.17 0.10 0 0 0</pose> <!-- specifies position+orientation -->
+    <visualize>true</visualize>
+    <update_rate>30</update_rate>
+    <ray>
+      <scan>
+        <horizontal>
+          <samples>360</samples>
+          <resolution>1</resolution>
+          <min_angle>-1.57</min_angle>
+          <max_angle>1.57</max_angle>
+        </horizontal>
+      </scan>
+      <range>
+        <min>0.1</min>
+        <max>5.0</max>
+        <resolution>0.01</resolution>
+      </range>
+      <noise>
+        <type>gaussian</type>
+        <mean>0.0</mean>
+        <stddev>0.01</stddev>
+      </noise>
+    </ray>
+    <plugin name="gazebo_ros_ray_sensor" filename="libgazebo_ros_ray_sensor.so">
+      <ros>
+        <namespace>/</namespace>
+        <remapping>~/scan:=scan</remapping>
+      </ros>
+      <frame_name>lidar_link</frame_name>
+    </plugin>
+  </sensor>
+</gazebo>
+
+</robot>
