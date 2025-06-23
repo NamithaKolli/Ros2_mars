@@ -4,6 +4,8 @@ __STRUCTURE AND USAGE OF MY PACKAGE:__
 
 __Packange_name:my_robo1_py_pkg__
 
+__NOTE: google drive has compressed and automatically reduced the quality of video through link for best resolution please download the video before watching through this link .__
+
 [▶️ demo video of my robot](https://drive.google.com/file/d/1EaPIZRA7TgUogHMNSCsFIpUKumJd2ER6/view?usp=sharing)
 
 __Package structure:__
