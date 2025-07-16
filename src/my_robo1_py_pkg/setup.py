@@ -36,6 +36,7 @@ setup(
     entry_points={
     'console_scripts': [
         'obstacle_stop_node = my_robo1_py_pkg.obstacle_stop_node:main',
+        'object_detection_node = my_robo1_py_pkg.object_detection_node:main'
     ],
     },
 )
