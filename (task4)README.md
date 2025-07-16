@@ -1,13 +1,13 @@
 Task4
 
+  [▶️ Cone detection Demo video:](https://drive.google.com/file/d/18cWF08NQ1Up5IpKTperSHemE8e1-LHPY/view?usp=sharing) 
 __Computer vision:__
 
 
 
 * __Computer vision__ is when computers learn to see and understand images or videos like humans do.
 * In simple words: It’s teaching computers to “look” at pictures and figure out what’s in them.
-
-      
+   
 Examples:
 
 * Recognizing faces in photos.
@@ -44,6 +44,8 @@ __Some issues I faced during the process of detecting the cone:__
 * As we have to manually set the ranges using HSV values, sometimes the ranges might be too narrow or too wide which can lead to improper detection, which I faced personally.
 * It detected partially when the cone was farther ,so I had to again widen the range.
 * The contour lines (bounding shapes) are not very clear when the object is at a distance due to low pixel detection,background blending etc.
+
+
 * __YOLO__
 * Using yolo can make detection much more precise and accurate as compared to open CV .But it requires more time and training .
 * It can even detect shapes , if just colour doesn't give accurate results.
